@@ -1,0 +1,98 @@
+i[data-icon='square-pen'] {
+  mask-image: url('../node_modules/lucide-static/icons/square-pen.svg');
+}
+i[data-icon='layers-2'] {
+  mask-image: url('../node_modules/lucide-static/icons/layers-2.svg');
+}
+i[data-icon='users-round'] {
+  mask-image: url('../node_modules/lucide-static/icons/users-round.svg');
+}
+i[data-icon='plus'] {
+  mask-image: url('../node_modules/lucide-static/icons/plus.svg');
+}
+i[data-icon='send-horizontal'] {
+  mask-image: url('../node_modules/lucide-static/icons/send-horizontal.svg');
+}
+i[data-icon='newspaper'] {
+  mask-image: url('../node_modules/lucide-static/icons/newspaper.svg');
+}
+i[data-icon='radio'] {
+  mask-image: url('../node_modules/lucide-static/icons/radio.svg');
+}
+i[data-icon='file-input'] {
+  mask-image: url('../node_modules/lucide-static/icons/file-input.svg');
+}
+i[data-icon='files'] {
+  mask-image: url('../node_modules/lucide-static/icons/files.svg');
+}
+i[data-icon='x'] {
+  mask-image: url('../node_modules/lucide-static/icons/x.svg');
+}
+i[data-icon='arrow-up-right'] {
+  mask-image: url('../node_modules/lucide-static/icons/arrow-up-right.svg');
+}
+i[data-icon='copy'] {
+  mask-image: url('../node_modules/lucide-static/icons/copy.svg');
+}
+i[data-icon='circle-check'] {
+  mask-image: url('../node_modules/lucide-static/icons/circle-check.svg');
+}
+i[data-icon='clock'] {
+  mask-image: url('../node_modules/lucide-static/icons/clock.svg');
+}
+i[data-icon='list'] {
+  mask-image: url('../node_modules/lucide-static/icons/list.svg');
+}
+i[data-icon='chevron-right'] {
+  mask-image: url('../node_modules/lucide-static/icons/chevron-right.svg');
+}
+i[data-icon='chevron-left'] {
+  mask-image: url('../node_modules/lucide-static/icons/chevron-left.svg');
+}
+i[data-icon='refresh-cw'] {
+  mask-image: url('../node_modules/lucide-static/icons/refresh-cw.svg');
+}
+i[data-icon='trash-2'] {
+  mask-image: url('../node_modules/lucide-static/icons/trash-2.svg');
+}
+i[data-icon='book-open'] {
+  mask-image: url('../node_modules/lucide-static/icons/book-open.svg');
+}
+i[data-icon='calendar-clock'] {
+  mask-image: url('../node_modules/lucide-static/icons/calendar-clock.svg');
+}
+i[data-icon='file-text'] {
+  mask-image: url('../node_modules/lucide-static/icons/file-text.svg');
+}
+i[data-icon='check'] {
+  mask-image: url('../node_modules/lucide-static/icons/check.svg');
+}
+i[data-icon='play'] {
+  mask-image: url('../node_modules/lucide-static/icons/play.svg');
+}
+i[data-icon='heart'] {
+  mask-image: url('../node_modules/lucide-static/icons/heart.svg');
+}
+i[data-icon='message-circle'] {
+  mask-image: url('../node_modules/lucide-static/icons/message-circle.svg');
+}
+i[data-icon='qr-code']{mask-image:url('../node_modules/lucide-static/icons/qr-code.svg')}
+i[data-icon='panel-left']{mask-image:url('../node_modules/lucide-static/icons/panel-left.svg')}
+i[data-icon='search']{mask-image:url('../node_modules/lucide-static/icons/search.svg')}
+i[data-icon='image'] {
+  mask-image: url('../node_modules/lucide-static/icons/image.svg');
+}
+i[data-icon='share-2'] { mask-image: url('../node_modules/lucide-static/icons/share-2.svg'); }
+i[data-icon='bookmark'] { mask-image: url('../node_modules/lucide-static/icons/bookmark.svg'); }
+i[data-icon='calendar-days'] {
+  mask-image: url('../node_modules/lucide-static/icons/calendar-days.svg');
+}
+i[data-icon='triangle-alert'] {
+  mask-image: url('../node_modules/lucide-static/icons/triangle-alert.svg');
+}
+i[data-icon='circle-alert'] {
+  mask-image: url('../node_modules/lucide-static/icons/circle-alert.svg');
+}
+i[data-icon='flag'] {
+  mask-image: url('../node_modules/lucide-static/icons/flag.svg');
+}

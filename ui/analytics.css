@@ -1,0 +1,91 @@
+#overview, #analytics { max-width: 1740px; margin-inline: auto; }
+.insight-head, .scope-bar, .library-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.insight-head { justify-content: space-between; margin: 4px 0 16px; }
+.insight-head h2 { margin: 0; font-size: clamp(20px, 2vw, 27px); letter-spacing: -.025em; }
+.insight-head h2 small, .desk-ranks h2 small { font: 400 13px var(--num); color: var(--muted); margin-left: 4px; }
+.scope-bar { gap: 6px; padding-bottom: 14px; }
+.scope-bar button { gap: 7px; border-radius: 20px; padding: 5px 12px; min-height: 33px; color: var(--muted); border: 1px solid var(--line); }
+.scope-bar .brand-icon, .work-byline .brand-icon { width: 16px; height: 16px; border-radius: 4px; object-fit: contain; }
+.scope-bar button[aria-pressed=true] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.overview-band { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); border: 1px solid var(--line); border-radius: 14px; background: var(--paper); overflow: hidden; }
+.growth-kpis.desk-metrics { margin: 0; padding: 12px; gap: 6px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+.growth-kpis.desk-metrics button { padding: 13px 16px; border-radius: 8px; gap: 5px; display: flex; justify-content: center; border: 1px solid transparent; }
+.growth-kpis.desk-metrics button[aria-pressed=true] { border-color: var(--line); box-shadow: inset 3px 0 var(--accent); }
+.growth-kpis.desk-metrics button:hover, .scope-bar button:hover:not([aria-pressed=true]) { background: var(--hover); }
+.growth-label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink); }
+.growth-label i[data-icon], .card-counts i[data-icon] { width: 15px; height: 15px; }
+.growth-kpis.desk-metrics strong { font: 600 clamp(26px, 2.5vw, 40px)/1 var(--num); font-variant-numeric: tabular-nums; }
+.growth-kpis strong.up, .compare-table .up { color: var(--green); }
+.growth-kpis strong.down, .compare-table .down { color: var(--accent-dark); }
+.growth-kpis strong.missing, .compare-table .missing { color: var(--muted); }
+.growth-base, .growth-base small { font-size: 12px; color: var(--muted); }
+.growth-base small { display: inline-block; margin-left: 6px; }
+.growth-value { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.growth-value small { font-size: 11px; color: var(--muted); }
+.growth-chart { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 20px 24px; border-left: 1px solid var(--line); min-width: 0; }
+.growth-chart .section-row { margin: 0; }
+.growth-chart h2, .desk-ranks h2 { margin: 0; font-size: 17px; }
+.growth-chart .section-row small, .growth-latest, .chart-dates, .chart-note, .growth-empty small { color: var(--muted); font-size: 12px; }
+.growth-latest b { color: var(--ink); margin-left: 3px; font-variant-numeric: tabular-nums; }
+.growth-chart svg { width: 100%; height: 96px; overflow: visible; }
+.growth-chart .guide { stroke: var(--line); stroke-dasharray: 3 6; stroke-width: .6; }
+.growth-chart .axis { stroke: var(--line); }
+.growth-chart text { font: 11px var(--num); fill: var(--ink); }
+.growth-chart rect.up { fill: var(--green); }
+.growth-chart rect.down { fill: var(--accent); }
+.growth-chart rect.steady, .growth-chart .no-point { fill: var(--muted); }
+.chart-dates { display: flex; justify-content: space-around; font: 12px var(--num); }
+.chart-note { line-height: 1.55; display: block; margin-top: 3px; }
+.growth-empty { text-align: center; margin: auto; padding: 20px 0; line-height: 1.8; }
+.desk-ranks { margin: 24px 0; }
+.desk-ranks .section-row { gap: 8px; flex-wrap: wrap; }
+.library-grid, .poster-grid { display: grid; gap: 12px; align-items: stretch; }
+.library-grid { grid-template-columns: repeat(auto-fill, minmax(min(210px,100%),1fr)); }
+.work-card.rank { border-radius: 10px; }
+.work-card:hover { border-color: var(--accent); }
+.work-card .poster { height: auto; aspect-ratio: 16/9; background: var(--subtle); }
+.work-card .poster > img { object-fit: contain; }
+.work-card .poster-text { padding: 10px 12px; gap: 8px; flex: 1; align-content: start; }
+.work-byline { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.work-byline time { margin-left: auto; }
+.work-card .poster-text > b { font-size: 14px; text-wrap: pretty; overflow-wrap: anywhere; }
+.work-card .card-counts { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 5px; border-top: 1px solid var(--line); }
+.card-counts > span { display: inline-flex; align-items: center; gap: 3px; font: 13px var(--num); }
+.card-counts > span:first-child { color: var(--ink); font-weight: 650; }
+.report-link { text-align: right; margin-top: 16px; }
+#analytics { display: block; }
+#analytics > .data-sections { flex-direction: row; flex-wrap: wrap; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 0 0 6px; margin: 0 0 20px; background: transparent; }
+#analytics > .data-sections button { width: auto; padding: 6px 15px; font-size: 14px; }
+#analytics > .data-content { padding: 0; border: 0; background: transparent; }
+.library-tools { margin-bottom: 16px; justify-content: space-between; }
+.library-tools .work-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; border: 0; background: transparent; }
+.library-tools :is(input,select), .insight-head select { width: auto; max-width: 100%; }
+.compare-table { width: 100%; font-variant-numeric: tabular-nums; }
+.compare-table th, .compare-table td { text-align: right; padding: 12px 16px; }
+.compare-table th:first-child { text-align: left; }
+.compare-table td b { font: 600 21px var(--num); }
+.compare-table small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+.compare-link { display: inline-flex; gap: 10px; text-align: left; padding: 0; }
+.compare-link img { width: 26px; height: 26px; }
+.comparison .chart-note { margin-top: 10px; }
+@media (max-width: 950px) {
+  .overview-band { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .growth-kpis.desk-metrics button { padding: 10px; }
+  .growth-chart { padding: 14px; }
+}
+@media (max-width: 720px) {
+  .overview-band { grid-template-columns: minmax(0, 1fr); }
+  .growth-chart { border-left: 0; border-top: 1px solid var(--line); }
+  .scope-bar { gap: 5px; }
+  .scope-bar button { padding: 4px 8px; }
+  .library-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .work-card .poster-text { padding: 8px; }
+  .compare-table { min-width: 620px; }
+  .comparison { min-width: 0; }
+  .table-scroll { overflow-x: auto; }
+}
+@media (max-width: 480px) {
+  .work-byline { flex-wrap: wrap; }
+  .work-card .card-counts { gap: 4px; }
+  .library-tools .work-filters > input { width: 100%; }
+}

@@ -1,0 +1,106 @@
+const test = require('node:test')
+const assert = require('node:assert/strict')
+const { Store } = require('../src/store.cjs')
+const rules = require('../ui/rules.js')
+const calendarData = require('../ui/calendar-data.js')
+
+const draft = (over = {}) => ({ kind: 'article', title: '', body: '', xText: '', variants: {}, videoTags: '', images: [], videos: [], ...over })
+const levels = (d, p) => rules.checkPlatform(d, p).map((i) => i.level + ':' + i.field)
+
+test('平台规则：标题、正文与配图上限按平台区分', () => {
+  const d = draft({ title: '一'.repeat(21), body: '正文', images: [{ mime: 'image/png', size: 1000 }] })
+  assert.deepEqual(levels(d, 'xhs'), ['error:标题'])
+  assert.deepEqual(levels(d, 'douyin'), [])
+  assert.deepEqual(levels(draft({ title: '短', body: '有字' }), 'xhs'), ['error:配图'])
+  const many = Array.from({ length: 17 }, () => ({ mime: 'image/png', size: 10 }))
+  assert.deepEqual(levels(draft({ body: 'x', images: many }), 'douyin'), [])
+  assert.deepEqual(levels(draft({ body: 'x', images: many }), 'xhs'), [])
+  assert.deepEqual(levels(draft({ body: 'x', images: many.concat(many, many) }), 'douyin'), ['error:配图'])
+})
+
+test('平台规则：分平台文案优先于通用文案，X 使用专用文案', () => {
+  const d = draft({ title: '一'.repeat(25), body: 'x', variants: { xhs: { title: '短标题', body: '' } }, images: [{ mime: 'image/png', size: 1 }] })
+  assert.deepEqual(levels(d, 'xhs'), [])
+  assert.deepEqual(levels(d, 'channels'), ['error:标题'])
+  assert.deepEqual(levels(draft({ images: Array(5).fill({ mime: 'image/png', size: 1 }) }), 'x'), ['error:配图'])
+})
+
+test('平台规则：小红书和抖音网页拒绝 GIF，公众号允许', () => {
+  const d = draft({ title: 't', body: 'b', images: [{ mime: 'image/gif', size: 1 }] })
+  assert.ok(rules.checkPlatform(d, 'xhs').some((i) => i.level === 'error' && /GIF/.test(i.message)))
+  assert.ok(rules.checkPlatform(d, 'douyin').some((i) => i.level === 'error' && /GIF/.test(i.message)))
+  assert.deepEqual(levels(d, 'wechat'), [])
+})
+
+test('平台规则：快手把标题并入作品描述，话题去重与数量提示', () => {
+  const d = draft({ kind: 'video', title: '一'.repeat(600), body: '二'.repeat(500), videos: [{ name: 'a.mp4', size: 1 }] })
+  assert.deepEqual(levels(d, 'kuaishou'), ['error:正文'])
+  const tags = draft({ kind: 'video', title: 't', videoTags: '#AI #ai 效率 工具 写作', videos: [{ name: 'a.mp4' }] })
+  assert.deepEqual(levels(tags, 'kuaishou'), ['warn:话题'])
+  assert.deepEqual(levels(tags, 'douyin'), ['warn:话题'])
+})
+
+test('平台规则：视频未填标题时按文件名检查视频号短标题', () => {
+  const d = draft({ kind: 'video', videos: [{ name: '这是一个非常非常长的视频文件名称超过十六个字.mp4' }] })
+  assert.deepEqual(levels(d, 'channels'), ['error:标题'])
+  assert.equal(rules.check(d, ['channels', 'channels', 'toutiao']).length, 1)
+})
+
+test('日历数据：节气与农历月首可用于 2025–2030', () => {
+  assert.equal(calendarData.terms['2026-12-22'], '冬至')
+  assert.equal(calendarData.terms['2027-04-05'], '清明')
+  assert.ok(calendarData.months.some(([d, m]) => d === '2027-02-06' && m === '正'))
+  assert.ok(calendarData.months.some(([d, m]) => d === '2026-02-17' && m === '正'))
+})
+
+test('改期只对尚未到点的排期任务生效', () => {
+  const s = new Store(':memory:')
+  const a = s.addAccount({ platform: 'xiaobot', identity: 'column', name: '个人账号', mode: 'web' })
+  const now = Date.now()
+  const d = s.save({ title: '文章', body: '内容', xText: '', targets: [a.id] })
+  const [id] = s.queue(d.id, d.revision, now + 3600000, now)
+  const later = now + 3 * 86400000
+  assert.equal(s.reschedule(id, later, now).due, later)
+  assert.throws(() => s.reschedule(id, now - 1000, now), /未来/)
+  s.transition(id, ['queued'], 'waiting')
+  assert.throws(() => s.reschedule(id, later + 1000, now), /尚未到点/)
+  const d2 = s.save({ title: '另一篇', body: '内容2', xText: '', targets: [a.id] })
+  const [due] = s.queue(d2.id, d2.revision, null, now)
+  assert.throws(() => s.reschedule(due, later, now + 1), /尚未到点/)
+})
+
+test('PostVela 图集可转为图文稿：按页序用备用 PNG，再次导入复用草稿', async (t) => {
+  const fs = require('node:fs/promises'), path = require('node:path'), os = require('node:os')
+  const { Sources } = require('../src/sources.cjs')
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'fatio-pv-draft-'))
+  const s = new Store(':memory:')
+  t.after(async () => { s.db.close(); await fs.rm(root, { recursive: true, force: true, maxRetries: 3 }) })
+  const fakeImage = { createFromBuffer: () => ({ isEmpty: () => false, getSize: () => ({ width: 8, height: 8 }), resize: () => ({ toJPEG: () => Buffer.from('j') }) }) }
+  const sources = new Sources(s, path.join(root, 'videos'), fakeImage)
+  sources.bind('postvela', root)
+  const p = path.join(root, 'projects', '开源工具', '动态导出')
+  await fs.mkdir(path.join(p, 'page-002.pvt'), { recursive: true })
+  await fs.writeFile(path.join(p, '图文索引.md'), '# 图集')
+  await fs.writeFile(path.join(p, '发布文案.txt'), '做视频找素材太麻烦？我把工具开源了\n\n正文第一段\n#效率')
+  const png = (n) => Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), Buffer.from('page' + n)])
+  await fs.writeFile(path.join(p, 'page-001.png'), png(1))
+  await fs.writeFile(path.join(p, 'page-002.png'), png(2))
+  await fs.writeFile(path.join(p, 'page-003.png'), png(3))
+  for (const n of ['page-002-预览.mp4', 'page-002.pvt/a.JPG', 'page-002.pvt/a.MOV', 'page-002.pvt/metadata.plist'])
+    await fs.writeFile(path.join(p, n), 'fixture')
+  const [item] = (await sources.list('postvela')).items
+  const pack = await sources.openPostvela(item.key)
+  assert.equal(pack.draftId, null)
+  const d = await sources.postvelaDraft(item.key)
+  assert.equal(d.title, '做视频找素材太麻烦？我把工具开源了')
+  assert.equal(d.body, '正文第一段\n#效率')
+  assert.equal(d.assets.length, 3)
+  assert.deepEqual(d.assets.map((id) => s.asset(id).name), ['page-001.png', 'page-002.png', 'page-003.png'])
+  assert.equal((await sources.openPostvela(item.key)).draftId, d.id)
+  assert.equal((await sources.postvelaDraft(item.key)).id, d.id)
+  const fresh = await sources.postvelaDraft(item.key, true)
+  assert.notEqual(fresh.id, d.id)
+  const acc = s.addAccount({ platform: 'xiaobot', identity: 'column', name: '个人账号', mode: 'web' })
+  const saved = s.save({ ...fresh, targets: [acc.id] })
+  assert.equal(s.queue(saved.id, saved.revision, null).length, 1)
+})

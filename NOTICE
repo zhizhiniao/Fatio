@@ -1,0 +1,48 @@
+Fatio (发条, formerly JAStudio) includes adaptations of the local 禾高子 (PostVela) / WeSight browser helper.
+Copyright (C) 2026 WeSight contributors. AGPL-3.0-or-later; see LICENSE.
+src/platforms.cjs xPostTextError adapts the text validation in plugins/chrome/lib/x-post-content.ts.
+Source snapshot SHA-256: 817b1e1e5db6bce52e2f5b37adec4f2574b2d1fc3900fdf82b065d51e6cdf0ef
+Source lineage: WeSight / PostVela, baseline b67675e2343b742608445ae831703440655e3ac7 with adaptations.
+Fatio reads the interoperable text and page filenames produced by 禾高子 manualExport.ts.
+
+Runtime dependencies and their individual licenses are installed by npm:
+twitter-text (Apache-2.0), twitter-api-v2 (Apache-2.0), lucide-static (ISC, including upstream Feather attribution).
+Electron and Playwright are used with their own LICENSE files. See node_modules and the pinned package-lock.json.
+
+JAStudio 1.1 interoperates with the installed CreatorHub local API and database,
+DouyinDataReview's collector API and archive, Easel project manifests, and YiMei CSV reports.
+Third-party desktop programs and their account sessions are not bundled. CSV parsing uses csv-parse (MIT).
+
+JAStudio 1.2 uses its own Electron account partitions, media queue, creator-page adapters and works database.
+Legacy file-format readers are optional migration features. No companion desktop app or developer services are required.
+The installer redistributes the pinned Electron runtime, its Chromium notices and the production npm dependencies with their licenses.
+
+JAStudio 1.3 bundles raster site icons to identify destinations. Brand marks belong to their respective owners.
+douyin: https://www.douyin.com/favicon.ico
+kuaishou: https://p66-plat.wskwai.com/udata/pkg/fe/favicon.70ff1fcc.ico
+tiktok: https://www.tiktok.com/favicon.ico
+bilibili: https://static.hdslb.com/images/favicon.ico
+xiaohongshu: https://picasso-static.xiaohongshu.com/fe-platform/f43dc4a8baf03678996c62d8db6ebc01a82256ff.png
+channels: https://res.wx.qq.com/t/wx_fed/finder/helper/finder-helper-web/res/favicon-v2.ico
+wechat: https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png
+toutiao: https://sf3-cdn-tos.douyinstatic.com/obj/eden-cn/uhbfnupkbps/toutiao_favicon.ico
+zhihu: https://www.zhihu.com/favicon.ico
+X: https://x.com/apple-touch-icon.png
+xiaobot: https://static.xiaobot.net/resource/xiaobot-web/img/icons/favicon-32x32.png
+weibo: https://m.weibo.cn/favicon.ico
+
+JAStudio 1.5 includes Microsoft.Web.WebView2 1.0.3537.50 for its Windows Channels window.
+The redistributed SDK libraries and loader are accompanied by their Microsoft license
+in resources/channels-host/LICENSE.txt. The installer includes Microsoft's signed
+Evergreen WebView2 bootstrapper for Windows machines missing the runtime.
+
+Fatio 1.12 adopts the user-approved original mainspring logo. Build-only tools
+@napi-rs/canvas (MIT) and rcedit (MIT) generate icons and Windows executable resources;
+they are not bundled as runtime dependencies. Historical JAStudio version names above
+identify the releases in which the corresponding third-party components were introduced.
+
+The publishing calendar and platform rule pre-check follow the design of AiToEarn
+(https://github.com/yikart/AiToEarn, Copyright (c) yikart, MIT License). ui/rules.js adapts the
+per-platform contentLimits / mediaRules values from aitoearn-server; no AiToEarn source files are bundled.
+ui/calendar-data.js holds lunar month starts and solar terms for 2025-2030 precomputed with
+lunar-javascript (MIT); the library itself is not bundled.

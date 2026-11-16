@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: studio-media:; media-src studio-media:; font-src 'self'; form-action 'none'; base-uri 'none'"
+    />
+    <title>发条 Fatio</title>
+    <link rel="icon" href="fatio.ico" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="icons.css" />
+    <link rel="stylesheet" href="workspace.css" />
+    <link rel="stylesheet" href="studio.css" />
+    <link rel="stylesheet" href="desk.css" />
+    <link rel="stylesheet" href="analytics.css" />
+    <link rel="stylesheet" href="fusion.css" />
+    <link rel="stylesheet" href="polish.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand" aria-label="发条 Fatio" title="发条 Fatio">
+        <img class="mark" src="fatio.svg" width="35" height="35" alt="" />
+        <strong>发条 <span>Fatio</span></strong>
+      </div>
+      <nav aria-label="主导航">
+        <button data-nav="home" title="工作台" class="active"><i data-icon="home"></i><span class="rail-name">工作台</span></button>
+        <button data-nav="accounts" title="账号"><i data-icon="users-round"></i><span class="rail-name">账号</span></button>
+        <button data-nav="write" title="发图文"><i data-icon="square-pen"></i><span class="rail-name">发图文</span></button>
+        <button data-nav="video" title="发视频"><i data-icon="film"></i><span class="rail-name">发视频</span></button>
+        <button data-nav="data" title="数据"><i data-icon="charts"></i><span class="rail-name">数据</span></button>
+        <button data-nav="queue" title="发布队列">
+          <i data-icon="layers-2"></i><span class="rail-name">发布队列</span><span id="pending"></span>
+        </button>
+      </nav>
+      <div class="local" title="本机工作区"><span></span>本机</div>
+    </aside>
+    <main>
+      <header id="command-bar">
+        <h1 id="screen-title">工作台</h1>
+        <div class="tools" id="header-tools"></div>
+      </header>
+      <section id="home" class="screen"><div id="overview"></div></section>
+      <section id="data" class="screen" hidden><div id="analytics"></div></section>
+      <section id="write" class="screen" hidden>
+        <aside class="drafts">
+          <div id="source-library"></div>
+          <div class="draft-heading"><strong id="draft-heading">我的图文</strong></div>
+          <div id="draft-list"></div>
+        </aside>
+        <div class="editor">
+          <div class="tabs" aria-label="创作形式">
+            <button data-action="format" data-id="article">转为图文稿</button
+            ><button data-action="format" data-id="video">转为视频稿</button
+            ><button data-action="project-info">作品资料</button
+            ><button data-action="projects">导入项目</button>
+          </div>
+          <div id="video-panel" hidden>
+            <button id="video-drop" data-action="videos">
+              <i data-icon="film"></i>选择或拖入视频
+            </button>
+            <div id="video-list"></div>
+            <div id="video-preview" hidden>
+              <video id="clip-player" controls playsinline crossorigin="anonymous"></video>
+              <section class="cover-studio" aria-label="封面工作室">
+              <div class="section-row"><h2>封面工作室</h2><div><button data-desk="frame">取当前帧</button> <button data-desk="cover">导入底图</button></div></div>
+              <div id="cover-frames"></div>
+              <label for="cover-idea">系列风格与画面创意</label>
+              <textarea id="cover-idea" rows="2" maxlength="4000" placeholder="例如：用蓝紫渐变和玻璃拱门表现 AI 入门门槛，保留参考图的配色"></textarea>
+              <div class="section-row"><button data-desk="generate-art">用 Codex 生图</button><small id="art-status" role="status"></small></div>
+              <div id="cover-candidate" hidden><img alt="Codex 候选底图"><button data-desk="use-art">采用这张底图</button></div>
+              <div class="section-row cover-tools"><select id="cover-layout" aria-label="封面版式"><option value="contain">保留完整画面</option><option value="fill">居中裁切铺满</option></select><label><input id="cover-title" type="checkbox">加上稿件标题</label><button class="primary" data-desk="make-covers"><i data-icon="layers-2"></i>生成各平台封面</button></div>
+              <div id="cover-formats"></div>
+              <button data-desk="apply-pending-covers" hidden>把新封面用于本视频的待处理任务</button>
+              </section>
+            </div>
+          </div>
+          <div class="field-line"><label for="title">标题</label><button data-desk="assist-title">优化标题</button></div
+          ><input id="title" maxlength="300" placeholder="文章标题" autocomplete="off" />
+          <div id="article-art"><div class="field-line"><strong>配图</strong><button data-desk="assist-images">审阅配图</button></div><div id="art-host"></div></div>
+          <div class="field-line"><label for="body" id="body-label">正文</label><button data-desk="assist-body">优化文案</button></div
+          ><textarea
+            id="body"
+            maxlength="150000"
+            placeholder="从这里开始写…"
+            spellcheck="false"
+          ></textarea>
+          <div id="video-tag-field" hidden><label for="video-tags">话题标签</label><input id="video-tags" maxlength="1000" placeholder="输入标签，用空格或逗号分隔"></div>
+          <div id="images"></div>
+          <div class="editor-foot">
+            <button data-action="images"><i data-icon="plus"></i>配图</button
+            ><span id="saved">空白草稿</span><span id="word-count">0 字</span>
+          </div>
+        </div>
+        <div class="settings">
+          <div id="assist-tabs" class="desk-switch"></div><div id="assist-pane" hidden></div><div id="pub-options">
+          <div class="section-row">
+            <h2>发布到</h2>
+            <button class="icon" data-action="add" aria-label="添加目标账号">
+              <i data-icon="plus"></i>
+            </button>
+          </div>
+          <div id="targets"></div>
+          <div id="precheck" class="precheck" role="status" aria-live="polite" hidden></div>
+          <div id="x-option" hidden>
+            <label for="x-text">X 专用文案 <small id="x-count"></small></label
+            ><textarea id="x-text" maxlength="10000" rows="4" placeholder="留空沿用正文"></textarea>
+          </div>
+          <div class="timing">
+            <details id="variants" hidden>
+              <summary>分平台设置</summary>
+              <label class="form-row">平台<select id="variant-platform"></select></label
+              ><input
+                id="variant-title"
+                aria-label="平台专用标题"
+                placeholder="标题沿用原稿"
+                maxlength="300"
+              /><textarea
+                id="variant-body"
+                aria-label="平台专用正文"
+                placeholder="正文沿用原稿"
+                maxlength="150000"
+              ></textarea>
+              <div id="variant-video" hidden>
+                <input id="variant-tags" placeholder="话题沿用通用设置" aria-label="平台专用话题" maxlength="1000">
+                <label class="form-row">单封面入口<select id="variant-cover"><option value="">按平台选用</option><option value="wide">优先横版</option><option value="portrait">优先竖版</option></select></label>
+              </div>
+            </details>
+            <h2>发布时间</h2>
+            <div class="seg">
+              <button id="now" class="selected">立即</button><button id="later">定时</button>
+            </div>
+            <input type="datetime-local" id="due" aria-label="本地发布时间" hidden />
+            <p id="schedule-note" class="hint" hidden>
+              请在到点时保持工作台运行。网页账号到点后进入待操作。
+            </p>
+          </div>
+          </div>
+        </div>
+        <div class="publish-bar">
+          <button data-action="save-current" class="outline">保存草稿</button>
+          <button id="enqueue" class="primary">
+            <i data-icon="send-horizontal"></i><span>加入发布队列</span>
+          </button>
+          <button id="sync-video" class="primary" hidden><i data-icon="send-horizontal"></i><span>一键带入所选账号</span></button>
+          <button data-nav="queue">发布记录</button>
+        </div>
+      </section>
+      <section id="queue" class="screen" hidden>
+        <div class="queue-top">
+          <div id="queue-filters" class="tabs"></div>
+          <div id="queue-view" class="seg" role="group" aria-label="队列视图">
+            <button data-cal="view" data-key="list"><i data-icon="list"></i>列表</button><button data-cal="view" data-key="calendar"><i data-icon="calendar-days"></i>日历</button>
+          </div>
+        </div>
+        <div class="queue-content">
+          <p id="queue-check-status" role="status" class="hint" hidden></p>
+          <div id="jobs"></div>
+          <div id="calendar" hidden></div>
+        </div>
+      </section>
+      <section id="accounts" class="screen" hidden>
+        <div class="accounts-layout">
+          <aside class="account-directory" aria-label="账号列表与工具">
+            <div class="account-filters" id="account-filters">
+              <input id="account-search" type="search" placeholder="搜索账号或标识" aria-label="搜索账号" />
+              <select id="account-platform" aria-label="平台筛选"></select>
+              <select id="account-group" aria-label="账号分组"></select>
+            </div>
+            <div id="account-list"></div>
+            <div id="account-session"></div>
+          </aside>
+          <div id="account-split" role="separator" aria-label="调整账号栏宽度" aria-orientation="vertical" aria-valuemin="60" aria-valuemax="392" tabindex="0" title="拖动调宽，双击恢复默认"><b></b></div>
+          <div id="account-space"></div>
+        </div>
+      </section>
+    </main>
+    <dialog id="dialog"><div id="dialog-inner"></div></dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="workspace.js"></script>
+    <script src="visuals.js"></script>
+    <script src="desk.js"></script>
+    <script src="analytics.js"></script>
+    <script src="composer.js"></script>
+    <script src="rules.js"></script>
+    <script src="precheck.js"></script>
+    <script src="calendar-data.js"></script>
+    <script src="calendar.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

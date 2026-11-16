@@ -1,0 +1,31 @@
+{
+  "name": "fatio",
+  "productName": "发条 Fatio",
+  "version": "1.12.2",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "build:windows": "node build/windows.cjs",
+    "test": "node --test test/*.test.cjs",
+    "test:ui": "node test/ui.cjs && node test/workspace-ui.cjs && node test/native-ui.cjs && node test/platform-ui.cjs && node test/visual-ui.cjs && node test/creator-ui.cjs && node test/weixin-ui.cjs && node test/authoring-ui.cjs && node test/video-batch-ui.cjs",
+    "build:channels": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File build/channels-host.ps1",
+    "build:brand": "node build/brand.cjs",
+    "test:brand": "node test/brand-ui.cjs",
+    "test:release": "node test/release-ui.cjs"
+  },
+  "dependencies": {
+    "csv-parse": "7.0.3",
+    "lucide-static": "1.69.0",
+    "twitter-api-v2": "1.31.0",
+    "twitter-text": "3.1.0"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "1.1.1",
+    "electron": "45.2.3",
+    "nock": "15.0.6",
+    "playwright": "1.65.0",
+    "rcedit": "5.0.1"
+  }
+}
