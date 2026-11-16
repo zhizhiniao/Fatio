@@ -4,6 +4,9 @@ const fs = require('node:fs/promises')
 const path = require('node:path')
 const { release, REPOSITORY } = require('../src/updates.cjs')
 const root = path.resolve(__dirname, '..')
+const parts = require('../package.json').version.split('.').map(Number)
+const nextVersion = [parts[0], parts[1], parts[2] + 1].join('.')
+const laterVersion = [parts[0], parts[1], parts[2] + 2].join('.')
 function fixture(v) {
   const tag = 'v' + v + '-dev.1', name = 'Fatio-Setup-' + v + '-x64.exe'
   return { tag_name: tag, html_url: REPOSITORY + '/releases/tag/' + tag, name: '更新提示隔离演示',
@@ -18,7 +21,7 @@ async function run() {
   const output = path.join(root, '.runtime/updates-20261115')
   await fs.mkdir(output, { recursive: true })
   const profile = await fs.mkdtemp(path.join(output, 'profile-'))
-  await fs.writeFile(path.join(profile, 'updates.json'), JSON.stringify({ auto: true, latest: release(fixture('1.12.4')), lastChecked: Date.now(), lastAttempt: Date.now() }))
+  await fs.writeFile(path.join(profile, 'updates.json'), JSON.stringify({ auto: true, latest: release(fixture(nextVersion)), lastChecked: Date.now(), lastAttempt: Date.now() }))
   const env = { ...process.env, FATIO_TEST_DATA: profile }
   delete env.ELECTRON_RUN_AS_NODE
   delete env.JASTUDIO_TEST_DATA
@@ -37,7 +40,7 @@ async function run() {
       globalThis.__openedUpdateLinks = []
       net.fetch = async () => Response.json(globalThis.__updateRows)
       shell.openExternal = async url => { globalThis.__openedUpdateLinks.push(url) }
-    }, [fixture('1.12.4')])
+    }, [fixture(nextVersion)])
     saved = await page.evaluate(async () => {
       const a = await studio['add-account']({ platform: 'xiaobot', mode: 'web', name: '更新保留演示', identity: 'update_fixture' })
       const d = await studio.save({ title: '更新验收草稿', body: '保留原稿', targets: [a.id], kind: 'article', xText: '' })
@@ -48,7 +51,7 @@ async function run() {
     assert.match(await page.locator('#updates-notes').innerText(), /<script>不可执行<\/script>/)
     assert.equal(await page.locator('#updates-notes script').count(), 0)
     await page.locator('#updates-download').click()
-    assert.deepEqual(await app.evaluate(() => globalThis.__openedUpdateLinks), [release(fixture('1.12.4')).download])
+    assert.deepEqual(await app.evaluate(() => globalThis.__openedUpdateLinks), [release(fixture(nextVersion)).download])
     await page.locator('#updates-recheck').click()
     await page.waitForFunction(() => document.querySelector('#updates-status').textContent === '发现新版本')
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(500, 720))
@@ -70,11 +73,11 @@ async function run() {
     assert.equal(state.updates.notify, false)
     assert.ok(state.data.accounts.some(a => a.id === saved.account))
     assert.ok(state.data.drafts.some(d => d.id === saved.draft && d.body === '保留原稿'))
-    await app.evaluate(({ net }, rows) => { net.fetch = async () => Response.json(rows) }, [fixture('1.12.5')])
+    await app.evaluate(({ net }, rows) => { net.fetch = async () => Response.json(rows) }, [fixture(laterVersion)])
     await page.locator('#update-check').click()
     await page.locator('#updates-recheck').click()
     await page.waitForFunction(() => document.querySelector('#update-check').classList.contains('has-update'))
-    assert.match(await page.locator('#updates-versions').innerText(), /1.12.5/)
+    assert.ok((await page.locator('#updates-versions').innerText()).includes(laterVersion))
     assert.deepEqual(errors, [])
   } finally { await close(app) }
   const report = { packaged: !!executablePath, checks: ['Cached startup notice', 'Manual check and trusted download link', 'Release notes rendered as text', 'Narrow window', 'Auto preference and skip survive restart', 'Later version notifies again', 'Account and draft survive restart'], pageErrors: errors }
