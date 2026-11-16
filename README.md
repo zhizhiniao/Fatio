@@ -8,9 +8,19 @@
 
 面向个人创作者的 Windows 本地发布工作台。集中管理多平台账号、图文与视频草稿、发布队列和作品数据，让同一份内容按平台分别准备，并保留原稿与作品的关系。
 
-> **1.12.2 开发者预览版** · Windows x64 · 2026-11-15。首次公开发布，当前主要在开发者本机验证。
+> **1.12.3 开发者预览版** · Windows x64 · 2026-11-15。支持自动检查更新，当前主要在开发者本机验证。
 
-[下载 Windows 安装包](https://github.com/zhizhiniao/Fatio/releases/download/v1.12.2-dev.1/Fatio-Setup-1.12.2-x64.exe) · [版本说明与校验文件](https://github.com/zhizhiniao/Fatio/releases/tag/v1.12.2-dev.1) · [使用说明](docs/USAGE.md) · [功能与验证范围](docs/STATUS.md) · [反馈问题](https://github.com/zhizhiniao/Fatio/issues)
+[下载 Windows 安装包](https://github.com/zhizhiniao/Fatio/releases/download/v1.12.3-dev.1/Fatio-Setup-1.12.3-x64.exe) · [版本说明与校验文件](https://github.com/zhizhiniao/Fatio/releases/tag/v1.12.3-dev.1) · [使用说明](docs/USAGE.md) · [功能与验证范围](docs/STATUS.md) · [反馈问题](https://github.com/zhizhiniao/Fatio/issues)
+
+## 软件更新
+
+从 1.12.3 起，启动后自动检查 GitHub 的公开版本；运行期间每 6 小时最多检查一次。发现新版后，左下角“检查更新”变为“发现新版”。也可随时点击手动检查。
+
+更新窗口显示本机版本、新版说明与预览版标记，可选择“下载更新”或“跳过此版本”，也可以关闭自动检查。跳过只针对当前版本，后续新版本仍会提示。
+
+下载完成后退出发条，运行安装包完成升级。原账号和草稿继续保留。本版提供自动检查和提示，安装由用户主动完成。
+
+**1.12.2 及更早版本没有更新检测代码，需要先从本页手动下载安装 1.12.3 一次。** 后续发布使用更高的程序版本号，配套公开 Release 与 Windows 安装包，即可被检测到；网络不可达时会提示稍后重试。
 
 ## 为什么做发条
 
@@ -60,7 +70,7 @@
 
 ## 安装与开始使用
 
-1. 在 [Releases](https://github.com/zhizhiniao/Fatio/releases/tag/v1.12.2-dev.1) 下载 `Fatio-Setup-1.12.2-x64.exe`。
+1. 在 [Releases](https://github.com/zhizhiniao/Fatio/releases/tag/v1.12.3-dev.1) 下载 `Fatio-Setup-1.12.3-x64.exe`。
 2. 退出正在运行的发条，运行安装包。默认安装到 `%LOCALAPPDATA%\Programs\发条 Fatio`。
 3. 从桌面“发条 Fatio”打开程序，在“账号”中选择平台，通过官方窗口登录自己的账号。
 4. 在“发图文”或“发视频”准备内容，选择账号，加入发布队列。
@@ -74,7 +84,7 @@
 下载页提供 `SHA256SUMS.txt`。在 PowerShell 中运行下面的命令，并与校验文件比较：
 
 ```powershell
-Get-FileHash '.\Fatio-Setup-1.12.2-x64.exe' -Algorithm SHA256
+Get-FileHash '.\Fatio-Setup-1.12.3-x64.exe' -Algorithm SHA256
 ```
 
 ## 升级与数据保留
@@ -86,7 +96,7 @@ Get-FileHash '.\Fatio-Setup-1.12.2-x64.exe' -Algorithm SHA256
 - 新安装路径确认可用后，再清理旧程序。安装器不会擅自清空旧目录里的未知文件。
 - 降级前备份当前资料。新版本数据库不保证能直接由旧版读取。
 
-本次开发机的目录迁移和资料保留结果见[版本说明](docs/releases/v1.12.2-dev.1.md)。Cookie 文件保留不等于平台保证登录长期有效。
+本次开发机的目录迁移和资料保留结果见[版本说明](docs/releases/v1.12.3-dev.1.md)。Cookie 文件保留不等于平台保证登录长期有效。
 
 ## 数据与隐私
 
@@ -115,10 +125,13 @@ npm start
 | `npm start` | 启动源码版 |
 | `npm test` | 核心逻辑回归 |
 | `npm run test:ui` | 多模块桌面流程；需要可交互桌面 |
+| `npm run test:updates` | 更新提示、设置保留与下载入口隔离验收 |
 | `npm run test:release` | 使用隔离资料检查安装版并生成公开演示截图 |
 | `npm run build:brand` | 生成正式 PNG 与 ICO |
 | `npm run build:channels` | 编译视频号 WebView2 窗口 |
 | `npm run build:windows` | 构建 Windows 独立安装包 |
+
+维护者发布新版本的步骤见 [RELEASING.md](docs/RELEASING.md)。
 
 首次运行视频号功能前，执行 `npm run build:channels`。构建使用 Windows 自带的 .NET Framework 4.x 编译器和固定版本 WebView2 SDK；Windows 安装包还需要 [Inno Setup 6](https://jrsoftware.org/isinfo.php)。首次构建需要联网下载微软运行库相关文件。
 

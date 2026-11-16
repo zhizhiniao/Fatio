@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="analytics.css" />
     <link rel="stylesheet" href="fusion.css" />
     <link rel="stylesheet" href="polish.css" />
+    <link rel="stylesheet" href="updates.css" />
   </head>
   <body>
     <aside class="sidebar">
@@ -34,6 +35,7 @@
           <i data-icon="layers-2"></i><span class="rail-name">发布队列</span><span id="pending"></span>
         </button>
       </nav>
+      <div class="updates-controls"><button id="update-check" class="update-check" title="检查更新"><small id="update-current"></small><span id="update-check-label">检查更新</span></button></div>
       <div class="local" title="本机工作区"><span></span>本机</div>
     </aside>
     <main>
@@ -177,6 +179,14 @@
       </section>
     </main>
     <dialog id="dialog"><div id="dialog-inner"></div></dialog>
+    <dialog id="updates-dialog" aria-labelledby="updates-title">
+      <div class="modal-head"><h2 id="updates-title">软件更新</h2><button id="updates-close" class="icon" aria-label="关闭更新窗口">×</button></div>
+      <p id="updates-status" role="status"></p><p id="updates-versions"></p><p id="updates-channel" class="hint"></p>
+      <pre id="updates-notes"></pre><p id="updates-last" class="hint"></p>
+      <label class="updates-preference"><input id="updates-auto" type="checkbox">自动检查更新（每 6 小时最多一次）</label>
+      <p class="hint">只向 GitHub 查询公开版本，不上传账号和草稿。下载完成后，退出发条并运行安装包升级，原有资料继续保留。</p>
+      <div class="updates-actions"><button id="updates-recheck">重新检查</button><button id="updates-skip" hidden>跳过此版本</button><button id="updates-release" hidden>查看版本说明</button><button id="updates-download" class="primary" hidden>下载更新</button></div>
+    </dialog>
     <div id="toast" role="status" aria-live="polite"></div>
     <script src="workspace.js"></script>
     <script src="visuals.js"></script>
@@ -188,5 +198,6 @@
     <script src="calendar-data.js"></script>
     <script src="calendar.js"></script>
     <script src="app.js"></script>
+    <script src="updates.js"></script>
   </body>
 </html>

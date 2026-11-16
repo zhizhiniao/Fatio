@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron')
 const names = [
+  'update-info', 'update-check', 'update-auto', 'update-skip', 'update-open',
   'account-tab',
   'account-tab-action',
   'snapshot',
@@ -74,6 +75,7 @@ for (const name of names)
     return result.value
   }
 api.onQueue = (callback) => ipcRenderer.on('queue-changed', () => callback())
+api.onUpdate = callback => ipcRenderer.on('update-changed', (_event, info) => callback(info))
 api.onClose = (callback) => ipcRenderer.on('flush-close', () => callback())
 api.onWorks = (callback) => ipcRenderer.on('native-show-works', () => callback())
 api.onJob = (callback) => ipcRenderer.on('native-job', (_, id) => callback(id))

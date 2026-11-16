@@ -1,7 +1,7 @@
 {
   "name": "fatio",
   "productName": "发条 Fatio",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "private": true,
   "license": "AGPL-3.0-or-later",
   "main": "src/main.cjs",
@@ -13,7 +13,8 @@
     "build:channels": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File build/channels-host.ps1",
     "build:brand": "node build/brand.cjs",
     "test:brand": "node test/brand-ui.cjs",
-    "test:release": "node test/release-ui.cjs"
+    "test:release": "node test/release-ui.cjs",
+    "test:updates": "node test/updates-ui.cjs"
   },
   "dependencies": {
     "csv-parse": "7.0.3",

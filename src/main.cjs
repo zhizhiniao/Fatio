@@ -8,11 +8,14 @@ const {
   dialog,
   clipboard,
   safeStorage,
-  nativeImage
+  nativeImage,
+  net,
+  shell
 } = require('electron')
 const fs = require('node:fs')
 const path = require('node:path')
 const brand = require('./brand.cjs')
+const { UpdateService } = require('./updates.cjs')
 const { pathToFileURL } = require('node:url')
 const { Store } = require('./store.cjs')
 const { accountInput, platforms, editorUrl, allowedPage, receiptUrl } = require('./platforms.cjs')
@@ -77,6 +80,8 @@ let main,
   receiptTimer,
   exportTimer,
   sampleTimer,
+  updates,
+  updateTimer,
   importRoot,
   timer,
   closing = false
@@ -1064,6 +1069,11 @@ function invoke(name, fn) {
   })
 }
 function register() {
+  invoke('update-info', () => updates.info())
+  invoke('update-check', () => updates.check(true))
+  invoke('update-auto', enabled => updates.automatic(enabled))
+  invoke('update-skip', () => updates.skip())
+  invoke('update-open', async kind => { await shell.openExternal(updates.target(kind)); return true })
   const sources=new (require('./sources.cjs').Sources)(store,videoRoot(),nativeImage)
   protocol.handle('studio-media',req=>require('./preview-media.cjs').previewMedia(store,videoRoot(),req))
   invoke('source-list',kind=>sources.list(kind))
@@ -1429,6 +1439,9 @@ function start() {
     }
   })
   Menu.setApplicationMenu(null)
+  updates = new UpdateService({ directory: app.getPath('userData'), currentVersion: app.getVersion(),
+    fetcher: (...args) => net.fetch(...args),
+    notify: info => { if (main && !main.isDestroyed()) main.webContents.send('update-changed', info) } })
   accountTabs = new AccountTabs(main, async (a, wc) => {
     if (studioPlatforms[a.platform]) {
       if (!wc.getURL().startsWith(studioPlatforms[a.platform].origin + '/')) return
@@ -1494,6 +1507,12 @@ function start() {
   const checkReceipts = () => { if (!closing) void queueReconciler.check().catch(() => {}) }
   receiptTimer = setInterval(checkReceipts, 90000)
   main.webContents.once('did-finish-load', checkReceipts)
+  if (!process.env.FATIO_TEST_DATA && !process.env.JASTUDIO_TEST_DATA) {
+    const checkUpdates = () => { if (!closing) void updates.check().catch(() => {}) }
+    main.webContents.once('did-finish-load', checkUpdates)
+    updateTimer = setInterval(checkUpdates, 60 * 60000)
+    updateTimer.unref()
+  }
   exportTimer = setInterval(() => { if (!closing) runNasExport() }, 10 * 60000)
   setTimeout(() => { if (!closing) runNasExport() }, 60000)
   sampleTimer = setInterval(() => void runAutoSample(), 5 * 60000)
@@ -1504,5 +1523,7 @@ app.on('window-all-closed', () => {
   clearInterval(receiptTimer)
   clearInterval(exportTimer)
   clearInterval(sampleTimer)
+  clearInterval(updateTimer)
+  updates?.cancel()
   app.quit()
 })
